@@ -1,0 +1,855 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>OnePlus Nord Buds 3 Pro | Experience Pure Sound</title>
+    <meta name="description" content="Immerse yourself in futuristic audio with the premium OnePlus Nord Buds 3 Pro. Featuring adaptive ANC, spatial soundscapes, and cinematic black-red aesthetics.">
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Outfit:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+    <!-- Custom Style Sheet -->
+    <link rel="stylesheet" href="style.css">
+    <!-- Lucide Icons -->
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <!-- Three.js CDN -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+    <!-- GSAP & ScrollTrigger CDN -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/ScrollTrigger.min.js"></script>
+</head>
+<body>
+
+    <!-- Premium Cinematic Loading Screen -->
+    <div id="loader" class="loader-overlay">
+        <div class="loader-content">
+            <div class="loader-brand">
+                <span class="brand-one">ONEPLUS</span><span class="brand-sub">NEO</span>
+            </div>
+            <div class="loader-bar-container">
+                <div class="loader-bar" id="loader-bar"></div>
+            </div>
+            <div class="loader-status">
+                <span class="status-text">INITIALIZING SOUNDSTAGE</span>
+                <span class="status-percent" id="loader-percent">0%</span>
+            </div>
+        </div>
+    </div>
+
+    <!-- Interactive Cursor Glow Background Effects -->
+    <div class="cursor-glow" id="cursor-glow"></div>
+    <div class="noise-overlay"></div>
+    <div class="neon-ambient-glow red-glow-1"></div>
+    <div class="neon-ambient-glow red-glow-2"></div>
+
+    <!-- Floating Background Particles (Dynamic Canvas) -->
+    <canvas id="particle-canvas" class="particle-canvas"></canvas>
+
+    <!-- Translucent Navigation Menu -->
+    <header class="navbar" id="navbar">
+        <div class="nav-container">
+            <a href="#hero" class="nav-logo">
+                <span class="logo-red">1+</span> <span class="logo-text">BUDS NEO</span>
+            </a>
+            <nav class="nav-links">
+                <a href="#features" class="nav-link">Features</a>
+                <a href="#showcase" class="nav-link">Showcase</a>
+                <a href="#purchase" class="nav-link">Order Now</a>
+                <a href="#reviews" class="nav-link">Reviews</a>
+            </nav>
+            <div class="nav-actions">
+                <button class="cart-trigger" id="cart-trigger" aria-label="Open Cart">
+                    <i data-lucide="shopping-bag"></i>
+                    <span class="cart-count" id="cart-count">0</span>
+                </button>
+                <a href="#purchase" class="nav-btn">Buy Now</a>
+                <button class="mobile-menu-btn" id="mobile-menu-btn" aria-label="Toggle Menu">
+                    <i data-lucide="menu"></i>
+                </button>
+            </div>
+        </div>
+    </header>
+
+    <!-- Mobile Navigation Drawer -->
+    <div class="mobile-drawer" id="mobile-drawer">
+        <div class="drawer-header">
+            <span class="logo-red">1+</span> <span class="logo-text">BUDS NEO</span>
+            <button class="drawer-close" id="drawer-close"><i data-lucide="x"></i></button>
+        </div>
+        <nav class="drawer-links">
+            <a href="#features" class="drawer-link">Features</a>
+            <a href="#showcase" class="drawer-link">Showcase</a>
+            <a href="#purchase" class="drawer-link">Order Now</a>
+            <a href="#reviews" class="drawer-link">Reviews</a>
+            <a href="#purchase" class="drawer-btn">Buy Now</a>
+        </nav>
+    </div>
+
+    <!-- Shopping Cart Slide-out Drawer -->
+    <div class="cart-drawer-overlay" id="cart-overlay"></div>
+    <div class="cart-drawer" id="cart-drawer">
+        <div class="cart-header">
+            <h3>Your Soundbag</h3>
+            <button class="cart-close" id="cart-close"><i data-lucide="x"></i></button>
+        </div>
+        <div class="cart-body" id="cart-body">
+            <!-- Empty state (will be replaced by active items dynamically) -->
+            <div class="cart-empty" id="cart-empty">
+                <i data-lucide="music" class="empty-icon"></i>
+                <p>Your soundbag is empty.</p>
+                <a href="#purchase" class="btn btn-primary close-cart-btn">Explore Sound</a>
+            </div>
+
+            <!-- Active Cart Content -->
+            <div class="cart-content-wrapper hidden" id="cart-content-wrapper">
+                <div class="cart-items" id="cart-items-container">
+                    <!-- Dynamic items loaded via JavaScript -->
+                </div>
+
+                <!-- Summary & Checkout Operations -->
+                <div class="cart-summary">
+                    <div class="coupon-section">
+                        <label for="coupon-input" class="coupon-label">Coupon Code</label>
+                        <div class="coupon-row">
+                            <input type="text" id="coupon-input" placeholder="e.g., ONEPLUSRED" class="glass-input">
+                            <button id="apply-coupon-btn" class="btn btn-secondary">Apply</button>
+                        </div>
+                        <p class="coupon-msg" id="coupon-message"></p>
+                    </div>
+
+                    <div class="price-row">
+                        <span>Subtotal</span>
+                        <span id="summary-subtotal">$199.00</span>
+                    </div>
+                    <div class="price-row discount-row hidden" id="summary-discount-row">
+                        <span>Discount (15%)</span>
+                        <span id="summary-discount">-$29.85</span>
+                    </div>
+                    <div class="price-row total-row">
+                        <span>Total</span>
+                        <span id="summary-total" class="highlight-red">$199.00</span>
+                    </div>
+
+                    <button class="btn btn-primary btn-block" id="proceed-checkout-btn">
+                        <span>Proceed to Checkout</span>
+                        <i data-lucide="arrow-right"></i>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Main Container -->
+    <main class="page-wrapper">
+
+        <!-- Hero Section -->
+        <section class="hero-section" id="hero">
+            <div class="hero-container container">
+                <div class="hero-text-content">
+                    <div class="tag-badge">Next-Gen Audio</div>
+                    <h1 class="hero-title">
+                        Experience <br>
+                        <span class="gradient-text">Pure Sound</span>
+                    </h1>
+                    <p class="hero-subtitle">
+                        Engineered with bespoke 11.4mm dual dynamic drivers, state-of-the-art 49dB adaptive noise cancellation, and high-fidelity spatial audio mapping. Built for those who demand acoustic perfection.
+                    </p>
+                    <div class="hero-actions">
+                        <a href="#purchase" class="btn btn-primary hero-btn-buy">
+                            <span>Buy Now</span>
+                            <i data-lucide="shopping-cart"></i>
+                        </a>
+                        <a href="#features" class="btn btn-secondary hero-btn-explore">
+                            <span>Explore Features</span>
+                            <i data-lucide="compass"></i>
+                        </a>
+                    </div>
+                    <div class="hero-specs-brief">
+                        <div class="brief-item">
+                            <span class="brief-val">49dB</span>
+                            <span class="brief-lbl">Smart ANC</span>
+                        </div>
+                        <div class="brief-item">
+                            <span class="brief-val">38h</span>
+                            <span class="brief-lbl">Battery Playback</span>
+                        </div>
+                        <div class="brief-item">
+                            <span class="brief-val">LHDC</span>
+                            <span class="brief-lbl">5.0 Audio</span>
+                        </div>
+                    </div>
+                </div>
+                <!-- 3D Canvas hosting interactive earbuds -->
+                <div class="hero-interactive-canvas">
+                    <div class="canvas-glow-bg"></div>
+                    <div id="three-canvas-container" class="canvas-wrapper">
+                        <!-- Three.js will append WebGL canvas here -->
+                    </div>
+                    <div class="canvas-instruction">
+                        <i data-lucide="move" class="drag-icon"></i>
+                        <span>Drag to rotate in 3D</span>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Features Section -->
+        <section class="features-section" id="features">
+            <div class="container">
+                <div class="section-header center-align">
+                    <div class="tag-badge">Uncompromising Tech</div>
+                    <h2>Engineered for the Future</h2>
+                    <p class="section-desc">Experience acoustic mechanics completely re-imagined. Advanced digital signal processing meets elite hardware architecture.</p>
+                </div>
+
+                <div class="features-grid">
+                    <!-- Noise Cancellation Card -->
+                    <div class="feature-card glass-card span-2" id="anc-card">
+                        <div class="card-glow-edge"></div>
+                        <div class="card-header">
+                            <div class="card-icon-container">
+                                <i data-lucide="shield-alert" class="card-icon red-icon"></i>
+                            </div>
+                            <h3>49dB Smart Adaptive ANC</h3>
+                        </div>
+                        <div class="card-body">
+                            <p>Real-time environment scanning analyzes surrounding frequencies and drops noise level instantly up to 49 decibels. Toggle ANC below to witness the wave cancellation effect.</p>
+                            
+                            <!-- Interactive Audio Waveform Cancellation -->
+                            <div class="wave-visualizer-container">
+                                <div class="visualizer-overlay-labels">
+                                    <span class="overlay-lbl active-noise-label">Ambient Noise</span>
+                                    <span class="overlay-lbl anti-noise-label">Anti-Noise Signal</span>
+                                </div>
+                                <svg class="wave-svg" viewBox="0 0 500 120" id="waveform-svg">
+                                    <!-- Dynamic Wave Lines will be animated in js -->
+                                    <path d="" stroke="#eb0028" stroke-width="2.5" fill="none" id="ambient-wave" opacity="0.8"></path>
+                                    <path d="" stroke="#00d2ff" stroke-width="2" fill="none" id="anti-wave" opacity="0.6"></path>
+                                    <line x1="0" y1="60" x2="500" y2="60" stroke="rgba(255,255,255,0.15)" stroke-dasharray="5 5"></line>
+                                </svg>
+                            </div>
+                            
+                            <div class="anc-controls-row">
+                                <button class="btn btn-toggle active" id="btn-anc-off">ANC OFF</button>
+                                <button class="btn btn-toggle" id="btn-anc-on">ANC ON</button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Battery Life Card -->
+                    <div class="feature-card glass-card" id="battery-card">
+                        <div class="card-glow-edge"></div>
+                        <div class="card-header">
+                            <div class="card-icon-container">
+                                <i data-lucide="battery-charging" class="card-icon red-icon"></i>
+                            </div>
+                            <h3>38 Hours of Powerhouse Playback</h3>
+                        </div>
+                        <div class="card-body center-content">
+                            <!-- Premium battery gauge visualization -->
+                            <div class="battery-visualizer">
+                                <div class="battery-outer">
+                                    <div class="battery-inner" id="battery-fill" style="width: 15%"></div>
+                                    <div class="battery-spark animate-pulse"></div>
+                                </div>
+                                <div class="battery-cap"></div>
+                                <div class="battery-value-hud">
+                                    <span class="battery-num" id="battery-num-hud">15%</span>
+                                </div>
+                            </div>
+                            <p class="battery-status-tag" id="battery-status-text">CHARGING SPEED FAST</p>
+                            <p class="card-text-muted">A swift 10-minute flash charge fuels up to 10 full hours of musical freedom.</p>
+                        </div>
+                    </div>
+
+                    <!-- Spatial Audio Card -->
+                    <div class="feature-card glass-card" id="spatial-card">
+                        <div class="card-glow-edge"></div>
+                        <div class="card-header">
+                            <div class="card-icon-container">
+                                <i data-lucide="maximize-2" class="card-icon red-icon"></i>
+                            </div>
+                            <h3>3D Spatial Audio Resonance</h3>
+                        </div>
+                        <div class="card-body">
+                            <p>Move your cursor over the radar grid to shift sound sources. Experience multi-directional sound field tracking in real-time.</p>
+                            
+                            <!-- Interactive Radar Container -->
+                            <div class="spatial-radar" id="spatial-radar-grid">
+                                <div class="radar-circle radar-c1"></div>
+                                <div class="radar-circle radar-c2"></div>
+                                <div class="radar-circle radar-c3"></div>
+                                <div class="radar-sweep"></div>
+                                <div class="radar-core">
+                                    <i data-lucide="headphones" class="radar-headphone-icon"></i>
+                                </div>
+                                <div class="radar-audio-node" id="radar-audio-node-1" style="top: 30%; left: 35%">
+                                    <span class="node-glow"></span>
+                                    <i data-lucide="volume-2" class="node-icon"></i>
+                                </div>
+                                <div class="radar-audio-node" id="radar-audio-node-2" style="top: 70%; left: 75%">
+                                    <span class="node-glow"></span>
+                                    <i data-lucide="music-4" class="node-icon"></i>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Touch Controls Card -->
+                    <div class="feature-card glass-card span-2" id="touch-card">
+                        <div class="card-glow-edge"></div>
+                        <div class="card-header">
+                            <div class="card-icon-container">
+                                <i data-lucide="fingerprint" class="card-icon red-icon"></i>
+                            </div>
+                            <h3>Smart Touch Gestures</h3>
+                        </div>
+                        <div class="card-body touch-layout">
+                            <div class="touch-text">
+                                <p>Effortlessly control your sound landscape without unlocking your phone. Hover over active interactive nodes to simulate touch gestures.</p>
+                                
+                                <div class="gesture-triggers">
+                                    <div class="gesture-item" data-gesture="single">
+                                        <span class="gesture-bullet"></span>
+                                        <div class="gesture-details">
+                                            <strong>Single Tap</strong>
+                                            <span>Play / Pause Music</span>
+                                        </div>
+                                    </div>
+                                    <div class="gesture-item" data-gesture="double">
+                                        <span class="gesture-bullet"></span>
+                                        <div class="gesture-details">
+                                            <strong>Double Tap</strong>
+                                            <span>Next Track / Call Answer</span>
+                                        </div>
+                                    </div>
+                                    <div class="gesture-item" data-gesture="triple">
+                                        <span class="gesture-bullet"></span>
+                                        <div class="gesture-details">
+                                            <strong>Triple Tap</strong>
+                                            <span>Previous Track</span>
+                                        </div>
+                                    </div>
+                                    <div class="gesture-item" data-gesture="hold">
+                                        <span class="gesture-bullet"></span>
+                                        <div class="gesture-details">
+                                            <strong>Long Hold</strong>
+                                            <span>Switch ANC / Transparency</span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="touch-interactive-visualizer">
+                                <div class="visualizer-earbud-plate">
+                                    <div class="earbud-outline-svg">
+                                        <!-- Modern stylized geometric earbud icon for gesture triggers -->
+                                        <svg class="touch-earbud-svg" viewBox="0 0 200 200">
+                                            <defs>
+                                                <radialGradient id="earbud-grad" cx="50%" cy="50%" r="50%">
+                                                    <stop offset="0%" stop-color="#2a2a2a" />
+                                                    <stop offset="100%" stop-color="#141414" />
+                                                </radialGradient>
+                                                <filter id="neon-glow-filter">
+                                                    <feGaussianBlur stdDeviation="3" result="coloredBlur"/>
+                                                    <feMerge>
+                                                        <feMergeNode in="coloredBlur"/>
+                                                        <feMergeNode in="SourceGraphic"/>
+                                                    </feMerge>
+                                                </filter>
+                                            </defs>
+                                            <!-- Earbud body representation -->
+                                            <rect x="75" y="80" width="50" height="90" rx="25" fill="url(#earbud-grad)" stroke="#eb0028" stroke-width="2.5" />
+                                            <circle cx="100" cy="70" r="45" fill="url(#earbud-grad)" stroke="#eb0028" stroke-width="2.5" />
+                                            <!-- Touch sensor zone -->
+                                            <circle cx="100" cy="70" r="20" fill="rgba(235, 0, 40, 0.1)" stroke="#ff2a4b" stroke-width="1.5" stroke-dasharray="3 3" class="pulse-ring" id="svg-touch-sensor" />
+                                            <circle cx="100" cy="70" r="8" fill="#eb0028" class="sensor-core" />
+                                        </svg>
+                                        <div class="touch-feedback-hud" id="touch-hud-message">Ready for Input</div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Product Showcase Section -->
+        <section class="showcase-section" id="showcase">
+            <div class="container">
+                <div class="section-header center-align">
+                    <div class="tag-badge">Obsessive Detail</div>
+                    <h2>360-Degree Premium Showcase</h2>
+                    <p class="section-desc">Rotate the model, change colors, and dive deep into specifications.</p>
+                </div>
+
+                <div class="showcase-interactive-grid">
+                    <!-- Left: Control Deck and Colors -->
+                    <div class="showcase-control-panel glass-card">
+                        <div class="card-glow-edge"></div>
+                        <h3>Personalize Your Palette</h3>
+                        <p class="panel-intro-text">Select your signature finish. The visualizer and core product meshes will morph dynamically in real-time.</p>
+                        
+                        <div class="color-picker-container">
+                            <span class="color-picker-label">Select Color: <strong id="selected-color-label" class="color-text-highlight">Matte Obsidian</strong></span>
+                            <div class="color-swatches">
+                                <button class="swatch active-swatch color-obsidian" data-color="obsidian" aria-label="Obsidian Black">
+                                    <span class="swatch-inner" style="background-color: #0c0c0c;"></span>
+                                </button>
+                                <button class="swatch color-crimson" data-color="crimson" aria-label="Crimson Pulse">
+                                    <span class="swatch-inner" style="background-color: #eb0028;"></span>
+                                </button>
+                                <button class="swatch color-spark" data-color="spark" aria-label="Platinum Spark">
+                                    <span class="swatch-inner" style="background-color: #f1f5f9;"></span>
+                                </button>
+                            </div>
+                        </div>
+
+                        <!-- Technical specs with float animations -->
+                        <div class="technical-specs-list">
+                            <h4>Technical Blueprint</h4>
+                            <div class="specs-grid">
+                                <div class="spec-unit">
+                                    <span class="spec-name">Acoustics</span>
+                                    <span class="spec-detail">11.4mm Dynamic Drivers</span>
+                                </div>
+                                <div class="spec-unit">
+                                    <span class="spec-name">Codec Format</span>
+                                    <span class="spec-detail">LHDC 5.0, AAC, SBC</span>
+                                </div>
+                                <div class="spec-unit">
+                                    <span class="spec-name">Latency</span>
+                                    <span class="spec-detail">54ms Ultra-low latency</span>
+                                </div>
+                                <div class="spec-unit">
+                                    <span class="spec-name">IP Rating</span>
+                                    <span class="spec-detail">IP55 Dust & Water Resistant</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Right: Large interactive canvas for 360-degree rotation -->
+                    <div class="showcase-canvas-panel glass-card">
+                        <div class="card-glow-edge"></div>
+                        <div class="showcase-scene-holder">
+                            <!-- Visual placeholder container -->
+                            <div id="showcase-three-canvas" class="showcase-canvas-wrapper"></div>
+                            <div class="showcase-overlay-hud">
+                                <div class="hud-angle-indicator" id="hud-angle">ANGL: 0°</div>
+                                <div class="hud-zoom-indicator">ZOOM: HOVER</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Purchase & Transaction Section -->
+        <section class="purchase-section" id="purchase">
+            <div class="container">
+                <div class="section-header center-align">
+                    <div class="tag-badge">Instant Dispatch</div>
+                    <h2>Secure Checkout soundstage</h2>
+                    <p class="section-desc">Experience seamless checkout mechanics. Configure and order your OnePlus Buds Neo securely.</p>
+                </div>
+
+                <!-- Purchase Card split layout -->
+                <div class="purchase-container glass-card">
+                    <div class="card-glow-edge"></div>
+                    <div class="purchase-config-side">
+                        <div class="purchase-meta">
+                            <h3>OnePlus Buds Neo</h3>
+                            <div class="stars-row">
+                                <i data-lucide="star" class="star-filled animate-pulse"></i>
+                                <i data-lucide="star" class="star-filled animate-pulse"></i>
+                                <i data-lucide="star" class="star-filled animate-pulse"></i>
+                                <i data-lucide="star" class="star-filled animate-pulse"></i>
+                                <i data-lucide="star" class="star-filled animate-pulse"></i>
+                                <span class="rating-subtext">(4.9/5 from 420 reviews)</span>
+                            </div>
+                            <div class="checkout-price-line">
+                                <span class="current-price" id="checkout-price">$199.00</span>
+                                <span class="original-price">$249.00</span>
+                                <span class="price-discount-tag">Save 20%</span>
+                            </div>
+                        </div>
+
+                        <!-- Selector Forms -->
+                        <div class="selectors-wrapper">
+                            <!-- Swatches mirrored -->
+                            <div class="selector-unit">
+                                <span class="selector-label">Choose color finish</span>
+                                <div class="purchase-swatches color-swatches">
+                                    <button class="swatch active-swatch purchase-swatch" data-color="obsidian" aria-label="Obsidian Black">
+                                        <span class="swatch-inner" style="background-color: #0c0c0c;"></span>
+                                    </button>
+                                    <button class="swatch purchase-swatch" data-color="crimson" aria-label="Crimson Pulse">
+                                        <span class="swatch-inner" style="background-color: #eb0028;"></span>
+                                    </button>
+                                    <button class="swatch purchase-swatch" data-color="spark" aria-label="Platinum Spark">
+                                        <span class="swatch-inner" style="background-color: #f1f5f9;"></span>
+                                    </button>
+                                </div>
+                            </div>
+
+                            <!-- Quantity Selection -->
+                            <div class="selector-unit">
+                                <span class="selector-label">Quantity</span>
+                                <div class="quantity-controller">
+                                    <button class="qty-btn" id="qty-minus" aria-label="Decrease Quantity"><i data-lucide="minus"></i></button>
+                                    <span class="qty-num" id="qty-val">1</span>
+                                    <button class="qty-btn" id="qty-plus" aria-label="Increase Quantity"><i data-lucide="plus"></i></button>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Action Buttons -->
+                        <div class="purchase-buttons">
+                            <button class="btn btn-primary btn-block" id="purchase-add-cart">
+                                <i data-lucide="shopping-cart"></i>
+                                <span>Add to Soundbag</span>
+                            </button>
+                        </div>
+
+                        <!-- Payment Methods Display -->
+                        <div class="payment-methods-showcase">
+                            <span class="payment-label">Supported Payment Channels</span>
+                            <div class="payments-grid">
+                                <div class="payment-icon-card" data-payment="upi">
+                                    <span class="pay-text">UPI</span>
+                                </div>
+                                <div class="payment-icon-card" data-payment="phonepe">
+                                    <span class="pay-text highlight-purple">PhonePe</span>
+                                </div>
+                                <div class="payment-icon-card" data-payment="gpay">
+                                    <span class="pay-text highlight-blue">GPay</span>
+                                </div>
+                                <div class="payment-icon-card" data-payment="paytm">
+                                    <span class="pay-text highlight-cyan">Paytm</span>
+                                </div>
+                                <div class="payment-icon-card" data-payment="visa">
+                                    <span class="pay-text">Visa</span>
+                                </div>
+                                <div class="payment-icon-card" data-payment="mastercard">
+                                    <span class="pay-text highlight-red-orange">Mastercard</span>
+                                </div>
+                                <div class="payment-icon-card" data-payment="applepay">
+                                    <span class="pay-text">Apple Pay</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Step-by-Step Checkout Delivery Address Side -->
+                    <div class="purchase-checkout-side">
+                        <div class="checkout-steps-hud">
+                            <div class="step-circle active-step" id="step-lbl-1">1</div>
+                            <div class="step-line" id="step-line-1"></div>
+                            <div class="step-circle" id="step-lbl-2">2</div>
+                        </div>
+
+                        <!-- Step 1: Delivery Address Form -->
+                        <form class="checkout-form" id="delivery-address-form">
+                            <h3>Delivery Signal Coordinates</h3>
+                            <p class="form-description">Enter your terminal credentials to finalize the audio dispatch.</p>
+                            
+                            <div class="input-group">
+                                <label for="cust-name">Full Name</label>
+                                <div class="input-icon-wrapper">
+                                    <i data-lucide="user" class="input-icon"></i>
+                                    <input type="text" id="cust-name" class="glass-input" placeholder="Aiden Mercer" required>
+                                </div>
+                            </div>
+
+                            <div class="input-group">
+                                <label for="cust-email">Email Terminal</label>
+                                <div class="input-icon-wrapper">
+                                    <i data-lucide="mail" class="input-icon"></i>
+                                    <input type="email" id="cust-email" class="glass-input" placeholder="aiden@cyber.net" required>
+                                </div>
+                            </div>
+
+                            <div class="input-group">
+                                <label for="cust-address">Delivery Destination</label>
+                                <div class="input-icon-wrapper text-area-wrapper">
+                                    <i data-lucide="map-pin" class="input-icon"></i>
+                                    <textarea id="cust-address" class="glass-input text-area-input" rows="2" placeholder="Grid Alpha-12, Cyberpunk Heights, Sector 7" required></textarea>
+                                </div>
+                            </div>
+
+                            <button type="submit" class="btn btn-primary btn-block checkout-submit-btn">
+                                <span>Validate & Lock Shipping</span>
+                                <i data-lucide="arrow-right"></i>
+                            </button>
+                        </form>
+
+                        <!-- Step 2: Payment Execution Panel (Hidden initially until Address validates) -->
+                        <div class="checkout-form hidden" id="payment-execution-panel">
+                            <h3>Payment Audio Gateway</h3>
+                            <p class="form-description">Authorized secure biometric and encrypted banking pipelines active.</p>
+
+                            <div class="address-recap-card">
+                                <div class="recap-row">
+                                    <i data-lucide="user" class="recap-icon"></i>
+                                    <span id="recap-name">Aiden Mercer</span>
+                                </div>
+                                <div class="recap-row">
+                                    <i data-lucide="map-pin" class="recap-icon"></i>
+                                    <span id="recap-addr">Grid Alpha-12, Cyberpunk Heights</span>
+                                </div>
+                                <button class="edit-address-btn" id="edit-address-trigger">Edit Details</button>
+                            </div>
+
+                            <div class="payment-method-selector-hub">
+                                <span class="field-title">Selected Method</span>
+                                <div class="selected-method-display" id="active-payment-hud">
+                                    <i data-lucide="credit-card" class="hud-pay-icon"></i>
+                                    <span id="active-payment-name">Visa / Mastercard Secured Pipeline</span>
+                                </div>
+                            </div>
+
+                            <div class="order-final-tally">
+                                <div class="tally-line">
+                                    <span>Base Rate</span>
+                                    <span id="tally-base">$199.00</span>
+                                </div>
+                                <div class="tally-line tally-discount hidden" id="tally-discount-line">
+                                    <span>Promo Discount</span>
+                                    <span id="tally-discount">-$29.85</span>
+                                </div>
+                                <div class="tally-line tally-total">
+                                    <span>Total Dispatch Rate</span>
+                                    <span id="tally-total" class="highlight-red">$199.00</span>
+                                </div>
+                            </div>
+
+                            <div class="checkout-actions-row">
+                                <button type="button" class="btn btn-secondary" id="payment-back-btn">Back</button>
+                                <button type="button" class="btn btn-primary" id="confirm-payment-btn">
+                                    <i data-lucide="shield-check"></i>
+                                    <span>Authorize Secure Order</span>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Holographic Order Success Modal -->
+        <div class="modal-overlay" id="success-modal-overlay"></div>
+        <div class="success-modal" id="success-modal">
+            <div class="modal-glow-boundary"></div>
+            <div class="modal-body-content">
+                <div class="success-ring-animation animate-pulse">
+                    <i data-lucide="check-circle" class="success-checkmark"></i>
+                </div>
+                <h2>Acoustic Dispatch Locked!</h2>
+                <p>Your biometric verification succeeded. The OnePlus Buds Neo order has been secure-locked in the next-generation dispatch pipeline.</p>
+                <div class="order-credentials-card">
+                    <div class="cred-row">
+                        <span>TRANSACTION ID</span>
+                        <strong class="highlight-cyan" id="success-tx-id">1PBUDS-827C9D</strong>
+                    </div>
+                    <div class="cred-row">
+                        <span>DISPATCH TARGET</span>
+                        <strong id="success-address">Aiden Mercer, Grid Alpha-12</strong>
+                    </div>
+                    <div class="cred-row">
+                        <span>AUDIO PROFILE</span>
+                        <strong class="highlight-red" id="success-color">Matte Obsidian</strong>
+                    </div>
+                </div>
+                <button class="btn btn-primary" id="close-success-modal">Return to soundstage</button>
+            </div>
+        </div>
+
+        <!-- Customer Reviews Section -->
+        <section class="reviews-section" id="reviews">
+            <div class="container">
+                <div class="section-header center-align">
+                    <div class="tag-badge">Sonic Reviews</div>
+                    <h2>Acoustic Endorsements</h2>
+                    <p class="section-desc">What tech critics and audio enthusiasts say about the Buds Neo sound profile.</p>
+                </div>
+
+                <div class="reviews-slider-container">
+                    <div class="reviews-track" id="reviews-track">
+                        <!-- Review Card 1 -->
+                        <div class="review-card glass-card">
+                            <div class="card-glow-edge"></div>
+                            <div class="review-header">
+                                <div class="review-avatar av-1"></div>
+                                <div class="review-user-info">
+                                    <strong>Marcus Vane</strong>
+                                    <span>Chief Editor, NeoTech</span>
+                                </div>
+                            </div>
+                            <div class="stars-line">
+                                <i data-lucide="star" class="star-filled"></i>
+                                <i data-lucide="star" class="star-filled"></i>
+                                <i data-lucide="star" class="star-filled"></i>
+                                <i data-lucide="star" class="star-filled"></i>
+                                <i data-lucide="star" class="star-filled"></i>
+                            </div>
+                            <p class="review-quote">"The dynamic ANC profile on the OnePlus Buds Neo is terrifyingly quiet. The moment the waveform drops, all room noises evaporate into complete void."</p>
+                        </div>
+
+                        <!-- Review Card 2 -->
+                        <div class="review-card glass-card">
+                            <div class="card-glow-edge"></div>
+                            <div class="review-header">
+                                <div class="review-avatar av-2"></div>
+                                <div class="review-user-info">
+                                    <strong>Lara Croft</strong>
+                                    <span>Audiophile & Acoustic Designer</span>
+                                </div>
+                            </div>
+                            <div class="stars-line">
+                                <i data-lucide="star" class="star-filled"></i>
+                                <i data-lucide="star" class="star-filled"></i>
+                                <i data-lucide="star" class="star-filled"></i>
+                                <i data-lucide="star" class="star-filled"></i>
+                                <i data-lucide="star" class="star-filled"></i>
+                            </div>
+                            <p class="review-quote">"Spatial audio resonance works masterfully here. Dragging my head or tracking the soundstages felt completely continuous, clean, and highly cinematic."</p>
+                        </div>
+
+                        <!-- Review Card 3 -->
+                        <div class="review-card glass-card">
+                            <div class="card-glow-edge"></div>
+                            <div class="review-header">
+                                <div class="review-avatar av-3"></div>
+                                <div class="review-user-info">
+                                    <strong>Kaelen Ward</strong>
+                                    <span>Pro-Gamer & Audio Producer</span>
+                                </div>
+                            </div>
+                            <div class="stars-line">
+                                <i data-lucide="star" class="star-filled"></i>
+                                <i data-lucide="star" class="star-filled"></i>
+                                <i data-lucide="star" class="star-filled"></i>
+                                <i data-lucide="star" class="star-filled"></i>
+                                <i data-lucide="star" class="star-empty"></i>
+                            </div>
+                            <p class="review-quote">"The 54ms latency mode holds strong. In highly competitive matches, footstep vectors are clean and exact. Plus, the charging battery goes forever."</p>
+                        </div>
+                    </div>
+
+                    <!-- Slide Controls -->
+                    <div class="slider-controls-row">
+                        <button class="slider-arrow" id="slide-left" aria-label="Previous Review"><i data-lucide="arrow-left"></i></button>
+                        <div class="slider-dots" id="slider-dots-container">
+                            <span class="slide-dot active-dot" data-index="0"></span>
+                            <span class="slide-dot" data-index="1"></span>
+                            <span class="slide-dot" data-index="2"></span>
+                        </div>
+                        <button class="slider-arrow" id="slide-right" aria-label="Next Review"><i data-lucide="arrow-right"></i></button>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Dynamic Translucent Footer -->
+        <footer class="footer-component">
+            <div class="container footer-grid">
+                <div class="footer-col brand-col">
+                    <a href="#hero" class="footer-logo">
+                        <span class="logo-red">1+</span> <span class="logo-text">BUDS NEO</span>
+                    </a>
+                    <p class="footer-brand-p">Crafting next-generation sonic gear for digital nomads and audiophile enthusiasts who require cinematic accuracy.</p>
+                    <div class="footer-social-icons">
+                        <a href="#" class="social-icon" aria-label="Twitter"><i data-lucide="twitter"></i></a>
+                        <a href="#" class="social-icon" aria-label="Instagram"><i data-lucide="instagram"></i></a>
+                        <a href="#" class="social-icon" aria-label="YouTube"><i data-lucide="youtube"></i></a>
+                        <a href="#" class="social-icon" aria-label="Github"><i data-lucide="github"></i></a>
+                    </div>
+                </div>
+
+                <div class="footer-col">
+                    <h4>Sound Systems</h4>
+                    <ul class="footer-links">
+                        <li><a href="#hero">Overview</a></li>
+                        <li><a href="#features">Smart ANC Tech</a></li>
+                        <li><a href="#showcase">3D Visualizer</a></li>
+                        <li><a href="#purchase">Order Hub</a></li>
+                    </ul>
+                </div>
+
+                <div class="footer-col">
+                    <h4>Support Signals</h4>
+                    <ul class="footer-links">
+                        <li><a href="#contact-modal-trigger" id="contact-trigger">Contact Terminal</a></li>
+                        <li><a href="#">Acoustic Support</a></li>
+                        <li><a href="#">Warranty Registry</a></li>
+                        <li><a href="#">Dispatch Tracking</a></li>
+                    </ul>
+                </div>
+
+                <div class="footer-col newsletter-col">
+                    <h4>Frequency Registry</h4>
+                    <p>Register your terminal for rare technical drops, promotional discounts, and firmware alerts.</p>
+                    <form class="newsletter-form" id="newsletter-form">
+                        <input type="email" placeholder="cyber@mail.net" class="glass-input" required>
+                        <button type="submit" class="btn btn-primary" aria-label="Subscribe"><i data-lucide="send"></i></button>
+                    </form>
+                    <span id="newsletter-hud" class="newsletter-success-hud"></span>
+                </div>
+            </div>
+
+            <div class="footer-legal-bottom container">
+                <p>&copy; 2026 OnePlus Neo Sound Labs. All rights reserved in virtual domains.</p>
+                <div class="legal-links">
+                    <a href="#">Encrypted Protocol Policy</a>
+                    <a href="#">User Agreements</a>
+                </div>
+            </div>
+        </footer>
+
+        <!-- Futuristic Contact Modal Terminal -->
+        <div class="modal-overlay" id="contact-modal-overlay"></div>
+        <div class="contact-modal" id="contact-modal">
+            <div class="modal-glow-boundary"></div>
+            <div class="modal-body-content">
+                <button class="modal-close-btn" id="contact-modal-close"><i data-lucide="x"></i></button>
+                <h2>Acoustic Support Coordinates</h2>
+                <p>Send a secure signal to our audio engineering team. Typical sync speeds are under 4 hours.</p>
+                <form class="checkout-form" id="contact-support-form">
+                    <div class="input-group">
+                        <label for="contact-name">Name</label>
+                        <div class="input-icon-wrapper">
+                            <i data-lucide="user" class="input-icon"></i>
+                            <input type="text" id="contact-name" class="glass-input" placeholder="Aiden Mercer" required>
+                        </div>
+                    </div>
+                    <div class="input-group">
+                        <label for="contact-email">Sync Node (Email)</label>
+                        <div class="input-icon-wrapper">
+                            <i data-lucide="mail" class="input-icon"></i>
+                            <input type="email" id="contact-email" class="glass-input" placeholder="aiden@cyber.net" required>
+                        </div>
+                    </div>
+                    <div class="input-group">
+                        <label for="contact-message">Signal Description (Message)</label>
+                        <div class="input-icon-wrapper text-area-wrapper">
+                            <i data-lucide="message-square" class="input-icon"></i>
+                            <textarea id="contact-message" class="glass-input text-area-input" rows="3" placeholder="My buds firmware won't sync with LHDC standard. Help!" required></textarea>
+                        </div>
+                    </div>
+                    <button type="submit" class="btn btn-primary btn-block">
+                        <span>Transmit Encrypted Signal</span>
+                        <i data-lucide="send"></i>
+                    </button>
+                </form>
+            </div>
+        </div>
+
+    </main>
+
+    <!-- Custom Logic Script -->
+    <script type="module" src="app.js"></script>
+</body>
+</html>
