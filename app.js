@@ -958,7 +958,79 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
 
-    // Payment selectors click glow updates
+    // Step-by-Step Checkout coordinations and DOM elements
+    const addressForm = document.getElementById('delivery-address-form');
+    const paymentPanel = document.getElementById('payment-execution-panel');
+    const stepLbl1 = document.getElementById('step-lbl-1');
+    const stepLbl2 = document.getElementById('step-lbl-2');
+    const stepLine = document.getElementById('step-line-1');
+    const editAddressBtn = document.getElementById('edit-address-trigger');
+    const paymentBackBtn = document.getElementById('payment-back-btn');
+
+    // Return to Step 1: Address Input
+    const returnToStep1 = () => {
+        if (stepLbl1) stepLbl1.className = "step-circle active-step";
+        if (stepLine) stepLine.className = "step-line";
+        if (stepLbl2) stepLbl2.className = "step-circle";
+        
+        if (paymentPanel) paymentPanel.classList.add('hidden');
+        if (addressForm) addressForm.classList.remove('hidden');
+        
+        State.checkoutStep = 1;
+    };
+
+    // Transition to Step 2: Payment Execution Panel
+    const goToStep2 = () => {
+        // Automatically populate cart if empty so the checkout is fully unlocked
+        if (State.cart.length === 0) {
+            State.cart.push({
+                color: State.selectedColor,
+                qty: State.quantity || 1,
+                price: State.basePrice
+            });
+            State.quantity = 1;
+            const qtyVal = document.getElementById('qty-val');
+            if (qtyVal) qtyVal.textContent = "1";
+            updateCartUI();
+        }
+
+        // Auto-fill address details if they are empty
+        const nameInput = document.getElementById('cust-name');
+        const emailInput = document.getElementById('cust-email');
+        const addrInput = document.getElementById('cust-address');
+        
+        if (nameInput && !nameInput.value.trim()) {
+            nameInput.value = nameInput.placeholder || "Aiden Mercer";
+        }
+        if (emailInput && !emailInput.value.trim()) {
+            emailInput.value = emailInput.placeholder || "aiden@cyber.net";
+        }
+        if (addrInput && !addrInput.value.trim()) {
+            addrInput.value = addrInput.placeholder || "Grid Alpha-12, Cyberpunk Heights, Sector 7";
+        }
+
+        const name = nameInput ? nameInput.value : "";
+        const addr = addrInput ? addrInput.value : "";
+        
+        // Populate Address Recap pane
+        const recapName = document.getElementById('recap-name');
+        const recapAddr = document.getElementById('recap-addr');
+        if (recapName) recapName.textContent = name;
+        if (recapAddr) recapAddr.textContent = addr;
+        
+        // Anim step HUD
+        if (stepLbl1) stepLbl1.className = "step-circle completed-step";
+        if (stepLine) stepLine.className = "step-line completed-line";
+        if (stepLbl2) stepLbl2.className = "step-circle active-step";
+        
+        // Morph forms
+        if (addressForm) addressForm.classList.add('hidden');
+        if (paymentPanel) paymentPanel.classList.remove('hidden');
+        
+        State.checkoutStep = 2;
+    };
+
+    // Payment selectors click glow updates & Direct step access
     const payCards = document.querySelectorAll('.payment-icon-card');
     const activePayHUDName = document.getElementById('active-payment-name');
     
@@ -984,63 +1056,39 @@ document.addEventListener('DOMContentLoaded', () => {
             if (activePayHUDName) {
                 activePayHUDName.textContent = namesMapping[payKey] || "Biometric Secured Gateway";
             }
+
+            // Instantly transition to Step 2 showing the payment method active!
+            goToStep2();
         });
     });
 
-    // Step-by-Step Checkout coordinations
-    const addressForm = document.getElementById('delivery-address-form');
-    const paymentPanel = document.getElementById('payment-execution-panel');
-    const stepLbl1 = document.getElementById('step-lbl-1');
-    const stepLbl2 = document.getElementById('step-lbl-2');
-    const stepLine = document.getElementById('step-line-1');
-    const editAddressBtn = document.getElementById('edit-address-trigger');
-    const paymentBackBtn = document.getElementById('payment-back-btn');
-    
     if (addressForm && paymentPanel) {
         // Validate Address submit (Move to Step 2)
         addressForm.addEventListener('submit', (e) => {
             e.preventDefault();
-            
-            // Verify cart isn't empty before payment
-            if (State.cart.length === 0) {
-                alert("Please add items to your soundbag before completing shipping.");
-                return;
-            }
-
-            const name = document.getElementById('cust-name').value;
-            const email = document.getElementById('cust-email').value;
-            const addr = document.getElementById('cust-address').value;
-            
-            // Populate Address Recap pane
-            document.getElementById('recap-name').textContent = name;
-            document.getElementById('recap-addr').textContent = addr;
-            
-            // Anim step HUD
-            stepLbl1.className = "step-circle completed-step";
-            stepLine.className = "step-line completed-line";
-            stepLbl2.className = "step-circle active-step";
-            
-            // Morph forms
-            addressForm.classList.add('hidden');
-            paymentPanel.classList.remove('hidden');
-            
-            State.checkoutStep = 2;
+            goToStep2();
         });
-
-        // Edit details back click
-        const returnToStep1 = () => {
-            stepLbl1.className = "step-circle active-step";
-            stepLine.className = "step-line";
-            stepLbl2.className = "step-circle";
-            
-            paymentPanel.classList.add('hidden');
-            addressForm.classList.remove('hidden');
-            
-            State.checkoutStep = 1;
-        };
 
         if (editAddressBtn) editAddressBtn.addEventListener('click', returnToStep1);
         if (paymentBackBtn) paymentBackBtn.addEventListener('click', returnToStep1);
+    }
+
+    // Add pointer cursors and click actions to the progress steps
+    if (stepLbl1 && stepLbl2) {
+        stepLbl1.style.cursor = 'pointer';
+        stepLbl2.style.cursor = 'pointer';
+        
+        stepLbl1.addEventListener('click', () => {
+            if (State.checkoutStep === 2) {
+                returnToStep1();
+            }
+        });
+        
+        stepLbl2.addEventListener('click', () => {
+            if (State.checkoutStep === 1) {
+                goToStep2();
+            }
+        });
     }
 
     // Place secure order final triggers

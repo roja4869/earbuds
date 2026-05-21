@@ -1862,7 +1862,15 @@ button, input, textarea {
     font-weight: 700;
     color: var(--color-text-muted);
     transition: var(--transition-fast);
+    cursor: pointer;
 }
+
+.step-circle:hover {
+    border-color: var(--color-primary);
+    color: var(--color-text-white);
+    background: rgba(255,255,255,0.08);
+}
+
 
 .step-circle.active-step {
     background: var(--color-primary);
