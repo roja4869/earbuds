@@ -3,28 +3,28 @@
    ========================================================================== */
 :root {
     /* Primary Colors */
-    --color-bg-deep: #0a0a0a;
-    --color-bg-darker: #050505;
-    --color-bg-card: rgba(18, 18, 18, 0.7);
-    --color-bg-glass: rgba(15, 15, 15, 0.65);
+    --color-bg-deep: #08090d; /* Luxurious deep cosmic blue-black */
+    --color-bg-darker: #030305;
+    --color-bg-card: rgba(16, 17, 24, 0.82);
+    --color-bg-glass: rgba(13, 14, 21, 0.78);
     
     /* Accents (OnePlus Neon Crimson & Cyber tones) */
-    --color-primary: #eb0028;
-    --color-primary-glow: rgba(235, 0, 40, 0.5);
-    --color-primary-dark: #b8001e;
-    --color-accent-blue: #00d2ff;
-    --color-accent-blue-glow: rgba(0, 210, 255, 0.4);
-    --color-accent-purple: #8b5cf6;
+    --color-primary: #ff123f; /* Vibrant Neon Scarlet */
+    --color-primary-glow: rgba(255, 18, 63, 0.45);
+    --color-primary-dark: #d8002a;
+    --color-accent-blue: #00f0ff; /* Electric Neon Cyan */
+    --color-accent-blue-glow: rgba(0, 240, 255, 0.45);
+    --color-accent-purple: #a78bfa;
     
     /* Neutral Shades */
     --color-text-white: #ffffff;
-    --color-text-silver: #e2e8f0;
-    --color-text-muted: #8e8e93;
-    --color-border-glass: rgba(255, 255, 255, 0.08);
-    --color-border-hover: rgba(235, 0, 40, 0.35);
+    --color-text-silver: #f1f5f9;
+    --color-text-muted: #b0b0bc; /* Increased contrast for standard descriptions */
+    --color-border-glass: rgba(255, 255, 255, 0.16); /* Increased contrast border */
+    --color-border-hover: rgba(255, 18, 63, 0.45); /* Bright glow on hover */
     
     /* Effects & Transition */
-    --backdrop-blur: blur(16px);
+    --backdrop-blur: blur(20px);
     --transition-premium: all 0.45s cubic-bezier(0.16, 1, 0.3, 1);
     --transition-fast: all 0.2s ease;
     --glow-shadow: 0 0 20px var(--color-primary-glow);
@@ -229,10 +229,10 @@ button, input, textarea {
 }
 
 .btn-primary {
-    background: var(--color-primary);
+    background: linear-gradient(135deg, #ff123f 0%, #d8002a 100%);
     color: var(--color-text-white);
-    border: 1px solid var(--color-primary);
-    box-shadow: 0 4px 15px rgba(235, 0, 40, 0.35);
+    border: 1px solid rgba(255, 255, 255, 0.15);
+    box-shadow: 0 4px 18px rgba(255, 18, 63, 0.45);
 }
 
 .btn-primary::after {
@@ -254,23 +254,25 @@ button, input, textarea {
 }
 
 .btn-primary:hover {
-    background: var(--color-primary-dark);
-    border-color: var(--color-primary-dark);
-    box-shadow: 0 6px 25px rgba(235, 0, 40, 0.55);
-    transform: translateY(-2px);
+    background: linear-gradient(135deg, #ff3b60 0%, #ff123f 100%);
+    border-color: rgba(255, 255, 255, 0.3);
+    box-shadow: 0 8px 30px rgba(255, 18, 63, 0.75);
+    transform: translateY(-2px) scale(1.02);
 }
 
 .btn-secondary {
-    background: rgba(255, 255, 255, 0.05);
+    background: rgba(255, 255, 255, 0.08);
     color: var(--color-text-white);
-    border: 1px solid var(--color-border-glass);
+    border: 1px solid rgba(255, 255, 255, 0.28);
     backdrop-filter: var(--backdrop-blur);
 }
 
 .btn-secondary:hover {
-    background: rgba(255, 255, 255, 0.1);
-    border-color: var(--color-border-hover);
-    transform: translateY(-2px);
+    background: rgba(255, 18, 63, 0.1);
+    border-color: var(--color-primary);
+    color: var(--color-text-white);
+    box-shadow: 0 0 15px rgba(255, 18, 63, 0.35);
+    transform: translateY(-2px) scale(1.02);
 }
 
 .btn-block {
@@ -279,27 +281,28 @@ button, input, textarea {
 }
 
 .btn-toggle {
-    background: rgba(255, 255, 255, 0.04);
-    border: 1px solid var(--color-border-glass);
+    background: rgba(255, 255, 255, 0.08);
+    border: 1px solid rgba(255, 255, 255, 0.25);
     padding: 8px 18px;
     border-radius: 12px;
     font-size: 0.85rem;
-    font-weight: 500;
+    font-weight: 600;
+    color: var(--color-text-white);
     cursor: pointer;
     transition: var(--transition-fast);
 }
 
 .btn-toggle.active {
-    background: var(--color-primary);
-    border-color: var(--color-primary);
+    background: linear-gradient(135deg, #ff123f 0%, #d8002a 100%);
+    border-color: rgba(255, 255, 255, 0.25);
     color: var(--color-text-white);
-    box-shadow: 0 4px 10px rgba(235, 0, 40, 0.25);
+    box-shadow: 0 4px 15px rgba(255, 18, 63, 0.45);
 }
 
 .glass-input {
     width: 100%;
-    background: rgba(255, 255, 255, 0.03);
-    border: 1px solid var(--color-border-glass);
+    background: rgba(255, 255, 255, 0.06);
+    border: 1px solid rgba(255, 255, 255, 0.25);
     border-radius: 12px;
     padding: 14px 18px;
     color: var(--color-text-white);
@@ -309,8 +312,8 @@ button, input, textarea {
 
 .glass-input:focus {
     border-color: var(--color-primary);
-    background: rgba(255, 255, 255, 0.06);
-    box-shadow: 0 0 15px rgba(235, 0, 40, 0.15);
+    background: rgba(255, 255, 255, 0.1);
+    box-shadow: 0 0 18px rgba(255, 18, 63, 0.35);
 }
 
 /* Glassmorphism Cards Structure */
@@ -322,7 +325,7 @@ button, input, textarea {
     padding: 36px;
     position: relative;
     overflow: hidden;
-    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+    box-shadow: 0 12px 40px rgba(0, 0, 0, 0.65);
     transition: var(--transition-premium);
 }
 
@@ -333,7 +336,7 @@ button, input, textarea {
     width: 100%;
     height: 3px;
     background: linear-gradient(90deg, transparent, var(--color-primary-glow), transparent);
-    opacity: 0;
+    opacity: 0.4;
     transition: var(--transition-premium);
 }
 
@@ -342,8 +345,8 @@ button, input, textarea {
 }
 
 .glass-card:hover {
-    border-color: rgba(235, 0, 40, 0.2);
-    box-shadow: 0 15px 40px rgba(235, 0, 40, 0.05);
+    border-color: rgba(255, 18, 63, 0.45);
+    box-shadow: 0 15px 40px rgba(255, 18, 63, 0.18);
     transform: translateY(-4px);
 }
 
@@ -556,17 +559,19 @@ button, input, textarea {
 .nav-btn {
     padding: 10px 22px;
     border-radius: var(--radius-button);
-    background: var(--color-primary);
+    background: linear-gradient(135deg, #ff123f 0%, #d8002a 100%);
     font-size: 0.85rem;
-    font-weight: 600;
-    box-shadow: 0 4px 10px rgba(235, 0, 40, 0.25);
-    border: 1px solid var(--color-primary);
+    font-weight: 700;
+    color: var(--color-text-white);
+    box-shadow: 0 4px 15px rgba(255, 18, 63, 0.45);
+    border: 1px solid rgba(255, 255, 255, 0.15);
 }
 
 .nav-btn:hover {
-    background: var(--color-primary-dark);
-    box-shadow: 0 6px 15px rgba(235, 0, 40, 0.45);
-    transform: translateY(-1px);
+    background: linear-gradient(135deg, #ff3b60 0%, #ff123f 100%);
+    border-color: rgba(255, 255, 255, 0.3);
+    box-shadow: 0 6px 20px rgba(255, 18, 63, 0.65);
+    transform: translateY(-1px) scale(1.03);
 }
 
 .mobile-menu-btn {
@@ -797,16 +802,16 @@ button, input, textarea {
 .item-qty-control {
     display: flex;
     align-items: center;
-    border: 1px solid var(--color-border-glass);
+    border: 1px solid rgba(255, 255, 255, 0.22);
     border-radius: 8px;
-    background: rgba(0,0,0,0.2);
+    background: rgba(0,0,0,0.35);
 }
 
 .item-qty-btn {
     cursor: pointer;
-    padding: 4px 8px;
-    font-size: 0.75rem;
-    color: var(--color-text-muted);
+    padding: 4px 10px;
+    font-size: 0.8rem;
+    color: var(--color-text-white);
 }
 
 .item-qty-btn:hover {
@@ -1732,8 +1737,8 @@ button, input, textarea {
 .quantity-controller {
     display: inline-flex;
     align-items: center;
-    background: rgba(255,255,255,0.03);
-    border: 1px solid var(--color-border-glass);
+    background: rgba(255, 255, 255, 0.06);
+    border: 1px solid rgba(255, 255, 255, 0.22);
     border-radius: var(--radius-button);
     padding: 6px;
     align-self: flex-start;
@@ -1747,13 +1752,17 @@ button, input, textarea {
     display: flex;
     align-items: center;
     justify-content: center;
-    color: var(--color-text-muted);
+    color: var(--color-text-white);
+    background: rgba(255, 255, 255, 0.08);
+    border: 1px solid rgba(255, 255, 255, 0.2);
     transition: var(--transition-fast);
 }
 
 .qty-btn:hover {
-    color: var(--color-primary);
-    background: rgba(255,255,255,0.04);
+    color: var(--color-text-white);
+    background: var(--color-primary);
+    border-color: var(--color-primary);
+    box-shadow: 0 0 10px var(--color-primary-glow);
 }
 
 .qty-num {

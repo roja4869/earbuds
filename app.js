@@ -31,26 +31,26 @@ document.addEventListener('DOMContentLoaded', () => {
     const ColorPalette = {
         obsidian: {
             name: "Matte Obsidian",
-            primaryHex: "#121212",
-            accentHex: "#eb0028",
+            primaryHex: "#1a1a20",
+            accentHex: "#ff123f",
             isMetallic: true,
-            roughness: 0.65,
+            roughness: 0.5,
             metalness: 0.85
         },
         crimson: {
             name: "Crimson Pulse",
-            primaryHex: "#eb0028",
+            primaryHex: "#ff123f",
             accentHex: "#ffffff",
             isMetallic: true,
-            roughness: 0.25,
+            roughness: 0.22,
             metalness: 0.90
         },
         spark: {
             name: "Platinum Spark",
-            primaryHex: "#e2e8f0",
-            accentHex: "#eb0028",
+            primaryHex: "#f8fafc",
+            accentHex: "#ff123f",
             isMetallic: true,
-            roughness: 0.35,
+            roughness: 0.3,
             metalness: 0.95
         }
     };
@@ -160,7 +160,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 this.speedY = -(Math.random() * 0.7 + 0.2);
                 this.speedX = Math.random() * 0.4 - 0.2;
                 this.alpha = Math.random() * 0.4 + 0.15;
-                this.color = Math.random() > 0.3 ? '#eb0028' : '#7a7a7a'; // Neon red or carbon gray
+                this.color = Math.random() > 0.3 ? '#ff123f' : '#8e8e93'; // Neon scarlet or carbon gray
             }
             update() {
                 this.y += this.speedY;
@@ -184,9 +184,9 @@ document.addEventListener('DOMContentLoaded', () => {
                 ctx.fillStyle = this.color;
                 
                 // Add soft glowing overlay for red particles
-                if (this.color === '#eb0028') {
-                    ctx.shadowColor = '#eb0028';
-                    ctx.shadowBlur = 6;
+                if (this.color === '#ff123f') {
+                    ctx.shadowColor = '#ff123f';
+                    ctx.shadowBlur = 8;
                 }
                 
                 ctx.fill();
@@ -312,18 +312,18 @@ document.addEventListener('DOMContentLoaded', () => {
         container.appendChild(heroRenderer.domElement);
         
         // Lighting
-        const ambientLight = new THREE.AmbientLight(0xffffff, 0.6);
+        const ambientLight = new THREE.AmbientLight(0xffffff, 0.85);
         heroScene.add(ambientLight);
         
-        const keyLight = new THREE.DirectionalLight(0xffffff, 1.5);
+        const keyLight = new THREE.DirectionalLight(0xffffff, 2.2);
         keyLight.position.set(5, 8, 5);
         heroScene.add(keyLight);
         
-        const redFillLight = new THREE.PointLight(0xeb0028, 2.5, 10);
+        const redFillLight = new THREE.PointLight(0xff123f, 3.5, 10);
         redFillLight.position.set(-4, -2, 2);
         heroScene.add(redFillLight);
         
-        const cyanBackLight = new THREE.PointLight(0x00d2ff, 1.5, 10);
+        const cyanBackLight = new THREE.PointLight(0x00f0ff, 2.2, 10);
         cyanBackLight.position.set(2, 4, -4);
         heroScene.add(cyanBackLight);
         
@@ -398,18 +398,18 @@ document.addEventListener('DOMContentLoaded', () => {
         container.appendChild(showcaseRenderer.domElement);
         
         // Lighting
-        const ambientLight = new THREE.AmbientLight(0xffffff, 0.55);
+        const ambientLight = new THREE.AmbientLight(0xffffff, 0.75);
         showcaseScene.add(ambientLight);
         
-        const keyLight = new THREE.DirectionalLight(0xffffff, 1.8);
+        const keyLight = new THREE.DirectionalLight(0xffffff, 2.4);
         keyLight.position.set(3, 10, 5);
         showcaseScene.add(keyLight);
         
-        const redPoint = new THREE.PointLight(0xeb0028, 3.5, 12);
+        const redPoint = new THREE.PointLight(0xff123f, 4.5, 12);
         redPoint.position.set(4, -3, 3);
         showcaseScene.add(redPoint);
         
-        const bluePoint = new THREE.PointLight(0x00d2ff, 1.8, 10);
+        const bluePoint = new THREE.PointLight(0x00f0ff, 2.5, 10);
         bluePoint.position.set(-4, 2, -3);
         showcaseScene.add(bluePoint);
         
@@ -600,7 +600,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 
                 // Card visual changes
                 if (ancCard) {
-                    ancCard.style.borderColor = 'rgba(255, 255, 255, 0.08)';
+                    ancCard.style.borderColor = 'rgba(255, 255, 255, 0.16)';
                     ancCard.style.boxShadow = '0 10px 30px rgba(0, 0, 0, 0.5)';
                 }
             });
@@ -612,8 +612,8 @@ document.addEventListener('DOMContentLoaded', () => {
                 State.ancMode = 'on';
                 
                 if (ancCard) {
-                    ancCard.style.borderColor = 'rgba(0, 210, 255, 0.25)';
-                    ancCard.style.boxShadow = '0 15px 40px rgba(0, 210, 255, 0.05)';
+                    ancCard.style.borderColor = 'rgba(0, 240, 255, 0.45)';
+                    ancCard.style.boxShadow = '0 15px 40px rgba(0, 240, 255, 0.15)';
                 }
             });
         }
@@ -649,12 +649,12 @@ document.addEventListener('DOMContentLoaded', () => {
                 // Node pulsate and expand slightly on mouse approaches
                 if (dist < 15) {
                     node.style.transform = 'translate(-50%, -50%) scale(1.35)';
-                    node.style.backgroundColor = 'rgba(0, 210, 255, 0.45)';
-                    node.style.borderColor = '#00d2ff';
+                    node.style.backgroundColor = 'rgba(0, 240, 255, 0.55)';
+                    node.style.borderColor = '#00f0ff';
                 } else {
                     node.style.transform = 'translate(-50%, -50%) scale(1)';
-                    node.style.backgroundColor = 'rgba(235, 0, 40, 0.25)';
-                    node.style.borderColor = '#eb0028';
+                    node.style.backgroundColor = 'rgba(255, 18, 63, 0.35)';
+                    node.style.borderColor = '#ff123f';
                 }
             });
         });
@@ -696,25 +696,25 @@ document.addEventListener('DOMContentLoaded', () => {
                 
                 // Update HUD indicator
                 hud.textContent = feedbackMessages[gesture] || "SYSTEM ENGAGED";
-                hud.style.color = '#eb0028';
-                hud.style.boxShadow = '0 0 15px rgba(235,0,40,0.2)';
+                hud.style.color = '#ff123f';
+                hud.style.boxShadow = '0 0 15px rgba(255, 18, 63, 0.3)';
                 
                 // Expand sensor highlight ring
                 if (sensor) {
-                    sensor.setAttribute('fill', 'rgba(235, 0, 40, 0.35)');
-                    sensor.setAttribute('stroke', '#eb0028');
+                    sensor.setAttribute('fill', 'rgba(255, 18, 63, 0.4)');
+                    sensor.setAttribute('stroke', '#ff123f');
                 }
             });
             
             item.addEventListener('mouseleave', () => {
                 item.classList.remove('active-gesture');
                 hud.textContent = "READY FOR INPUT";
-                hud.style.color = '#00d2ff';
+                hud.style.color = '#00f0ff';
                 hud.style.boxShadow = '0 4px 10px rgba(0,0,0,0.5)';
                 
                 if (sensor) {
-                    sensor.setAttribute('fill', 'rgba(235, 0, 40, 0.1)');
-                    sensor.setAttribute('stroke', '#ff2a4b');
+                    sensor.setAttribute('fill', 'rgba(255, 18, 63, 0.12)');
+                    sensor.setAttribute('stroke', '#ff123f');
                 }
             });
         });
