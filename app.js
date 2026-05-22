@@ -686,8 +686,14 @@ document.addEventListener('DOMContentLoaded', () => {
             hold: "LONG HOLD DETECTED -> ADAPTIVE ANC ENGAGED"
         };
         
+        let clickTimeout;
+        
         items.forEach(item => {
+            // Hover Simulation
             item.addEventListener('mouseenter', () => {
+                // If a click simulation is active, don't interrupt it
+                if (clickTimeout) return;
+                
                 const gesture = item.getAttribute('data-gesture');
                 
                 // Highlight active items
@@ -707,6 +713,8 @@ document.addEventListener('DOMContentLoaded', () => {
             });
             
             item.addEventListener('mouseleave', () => {
+                if (clickTimeout) return;
+                
                 item.classList.remove('active-gesture');
                 hud.textContent = "READY FOR INPUT";
                 hud.style.color = '#00f0ff';
@@ -716,6 +724,53 @@ document.addEventListener('DOMContentLoaded', () => {
                     sensor.setAttribute('fill', 'rgba(255, 18, 63, 0.12)');
                     sensor.setAttribute('stroke', '#ff123f');
                 }
+            });
+
+            // Click Interaction Integration (Single/Double/Triple/Hold)
+            item.addEventListener('click', () => {
+                const gesture = item.getAttribute('data-gesture');
+                
+                // Clear any existing active timeout
+                if (clickTimeout) clearTimeout(clickTimeout);
+                
+                // Highlight active item
+                items.forEach(i => i.classList.remove('active-gesture'));
+                item.classList.add('active-gesture');
+                
+                // Set state
+                State.activeGesture = gesture;
+                
+                // Update HUD with intense glow
+                hud.textContent = feedbackMessages[gesture] || "SYSTEM ENGAGED";
+                hud.style.color = '#ff123f';
+                hud.style.boxShadow = '0 0 25px rgba(255, 18, 63, 0.6)';
+                
+                // Pulsate the touch sensor vector circle
+                if (sensor) {
+                    sensor.setAttribute('fill', 'rgba(255, 18, 63, 0.75)');
+                    sensor.setAttribute('stroke', '#ff123f');
+                    sensor.style.transform = 'scale(1.35)';
+                    sensor.style.transformOrigin = 'center';
+                    sensor.style.transition = 'transform 0.08s ease-out';
+                    
+                    setTimeout(() => {
+                        sensor.style.transform = 'scale(1)';
+                    }, 100);
+                }
+                
+                // Lock HUD feedback for 2 seconds before resetting to Ready
+                clickTimeout = setTimeout(() => {
+                    clickTimeout = null;
+                    item.classList.remove('active-gesture');
+                    hud.textContent = "READY FOR INPUT";
+                    hud.style.color = '#00f0ff';
+                    hud.style.boxShadow = '0 4px 10px rgba(0,0,0,0.5)';
+                    
+                    if (sensor) {
+                        sensor.setAttribute('fill', 'rgba(255, 18, 63, 0.12)');
+                        sensor.setAttribute('stroke', '#ff123f');
+                    }
+                }, 2000);
             });
         });
     };
@@ -747,6 +802,21 @@ document.addEventListener('DOMContentLoaded', () => {
     if (cartTrigger) cartTrigger.addEventListener('click', openCartDrawer);
     if (cartClose) cartClose.addEventListener('click', closeCartDrawer);
     if (cartOverlay) cartOverlay.addEventListener('click', closeCartDrawer);
+
+    // Proceed to Checkout button linkage
+    const proceedCheckoutBtn = document.getElementById('proceed-checkout-btn');
+    if (proceedCheckoutBtn) {
+        proceedCheckoutBtn.addEventListener('click', () => {
+            // Close side drawer drawer
+            closeCartDrawer();
+            
+            // Navigate smoothly to purchase node
+            const purchaseSection = document.getElementById('purchase');
+            if (purchaseSection) {
+                purchaseSection.scrollIntoView({ behavior: 'smooth' });
+            }
+        });
+    }
 
     // Color Swatch Selectors (Showcase & Purchase sides mirrored)
     const setupColorPickers = () => {
