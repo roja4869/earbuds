@@ -2579,3 +2579,385 @@ button, input, textarea {
         padding: 24px;
     }
 }
+
+/* ==========================================================================
+   11. Interactive Payment Gateway & Cyber Terminal Layouts
+   ========================================================================== */
+.gateway-terminal-container {
+    margin-top: 14px;
+    margin-bottom: 28px;
+    border-radius: 16px;
+    background: rgba(255, 255, 255, 0.01);
+    border: 1px dashed rgba(255, 255, 255, 0.1);
+    padding: 20px;
+    position: relative;
+    overflow: hidden;
+}
+
+.gateway-panel {
+    transition: opacity 0.3s ease, transform 0.3s ease;
+    opacity: 1;
+    transform: translateY(0);
+    display: block;
+}
+
+.gateway-panel.hidden {
+    display: none !important;
+    opacity: 0;
+    transform: translateY(12px);
+}
+
+/* Cyber Credit Card Layout */
+.cyber-credit-card {
+    position: relative;
+    width: 100%;
+    max-width: 300px;
+    aspect-ratio: 1.586;
+    border-radius: 16px;
+    background: linear-gradient(135deg, rgba(20, 24, 33, 0.85) 0%, rgba(8, 10, 15, 0.95) 100%);
+    border: 1px solid rgba(255, 255, 255, 0.12);
+    padding: 18px;
+    box-shadow: 0 12px 36px rgba(0, 0, 0, 0.55), inset 0 0 20px rgba(255, 255, 255, 0.03);
+    overflow: hidden;
+    margin: 0 auto 20px auto;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    transition: border-color 0.3s ease, box-shadow 0.3s ease;
+}
+
+.cyber-credit-card:hover {
+    border-color: rgba(0, 240, 255, 0.35);
+    box-shadow: 0 12px 36px rgba(0, 0, 0, 0.55), 0 0 16px rgba(0, 240, 255, 0.1), inset 0 0 20px rgba(255, 255, 255, 0.03);
+}
+
+.card-glow-overlay {
+    position: absolute;
+    top: -50%;
+    left: -50%;
+    width: 200%;
+    height: 200%;
+    background: radial-gradient(circle, rgba(0, 240, 255, 0.04) 0%, transparent 60%);
+    pointer-events: none;
+    transition: transform 0.5s ease;
+}
+
+.cyber-credit-card:hover .card-glow-overlay {
+    transform: translate(8%, 8%);
+}
+
+.card-top {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.bank-tag {
+    font-size: 0.6rem;
+    font-weight: 700;
+    color: rgba(255, 255, 255, 0.35);
+    letter-spacing: 2px;
+    text-transform: uppercase;
+}
+
+.card-brand {
+    font-size: 1rem;
+    font-weight: 900;
+    font-style: italic;
+    color: #fff;
+    letter-spacing: 1px;
+    text-shadow: 0 0 8px rgba(255, 255, 255, 0.4);
+}
+
+.card-middle {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-top: 6px;
+}
+
+.card-chip {
+    width: 34px;
+    height: 25px;
+    background: linear-gradient(135deg, #ebd07b 0%, #aa8524 100%);
+    border-radius: 4px;
+    border: 1px solid rgba(0, 0, 0, 0.2);
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-around;
+    padding: 3px 5px;
+    box-shadow: inset 0 1px 2px rgba(255, 255, 255, 0.4);
+}
+
+.chip-line {
+    height: 1px;
+    background: rgba(0, 0, 0, 0.2);
+    width: 100%;
+}
+
+.card-contactless {
+    width: 18px;
+    height: 18px;
+    color: rgba(255, 255, 255, 0.45);
+}
+
+.card-number-display {
+    font-family: 'Consolas', 'Courier New', monospace;
+    font-size: 1.05rem;
+    font-weight: 600;
+    color: #fff;
+    letter-spacing: 2px;
+    text-align: center;
+    margin: 10px 0;
+    text-shadow: 0 2px 4px rgba(0, 0, 0, 0.8), 0 0 8px rgba(0, 240, 255, 0.2);
+}
+
+.card-bottom {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-end;
+}
+
+.card-lbl {
+    font-size: 0.45rem;
+    color: rgba(255, 255, 255, 0.35);
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    margin-bottom: 2px;
+    display: block;
+}
+
+.card-val {
+    font-size: 0.7rem;
+    color: #fff;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    text-shadow: 0 1px 2px rgba(0, 0, 0, 0.5);
+    font-family: monospace;
+}
+
+.card-form-grid {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+
+.card-sub-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 12px;
+}
+
+/* UPI QR Styles */
+.upi-holographic-qr {
+    position: relative;
+    width: 150px;
+    height: 150px;
+    border-radius: 12px;
+    background: rgba(0, 240, 255, 0.02);
+    border: 1px solid rgba(0, 240, 255, 0.15);
+    padding: 14px;
+    margin: 0 auto 20px auto;
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    box-shadow: 0 0 20px rgba(0, 240, 255, 0.06);
+}
+
+.qr-glow-overlay {
+    position: absolute;
+    inset: 0;
+    background: radial-gradient(circle, rgba(0, 240, 255, 0.04) 0%, transparent 70%);
+    pointer-events: none;
+}
+
+.qr-scanning-laser {
+    position: absolute;
+    left: 0;
+    right: 0;
+    height: 2px;
+    background: #00f0ff;
+    box-shadow: 0 0 8px #00f0ff, 0 0 16px #00f0ff;
+    animation: scannerSweep 2.5s infinite ease-in-out;
+    pointer-events: none;
+}
+
+@keyframes scannerSweep {
+    0% { top: 4%; }
+    50% { top: 96%; }
+    100% { top: 4%; }
+}
+
+.qr-matrix-wrapper {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.qr-svg-graphic {
+    width: 80px;
+    height: 80px;
+}
+
+.qr-status-indicator {
+    position: absolute;
+    bottom: 6px;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+}
+
+.qr-hud-text {
+    font-size: 0.5rem;
+    color: #00f0ff;
+    font-weight: 700;
+    letter-spacing: 0.5px;
+    text-shadow: 0 0 4px rgba(0, 240, 255, 0.4);
+}
+
+.pulse-dot {
+    width: 5px;
+    height: 5px;
+    border-radius: 50%;
+    display: inline-block;
+}
+
+.pulse-dot.green {
+    background: #00f0ff;
+    box-shadow: 0 0 8px #00f0ff;
+    animation: pulseDot 1.5s infinite;
+}
+
+@keyframes pulseDot {
+    0% { transform: scale(0.9); opacity: 0.6; }
+    50% { transform: scale(1.3); opacity: 1; }
+    100% { transform: scale(0.9); opacity: 0.6; }
+}
+
+/* Apple Pay Biometric Styles */
+.fingerprint-terminal {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 20px;
+    background: rgba(255, 255, 255, 0.005);
+    border-radius: 12px;
+    border: 1px solid rgba(255, 255, 255, 0.04);
+    margin-bottom: 8px;
+}
+
+.fingerprint-radial-progress {
+    position: relative;
+    width: 120px;
+    height: 120px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-bottom: 14px;
+}
+
+.progress-ring-svg {
+    position: absolute;
+    transform: rotate(-90deg);
+    transform-origin: center;
+    pointer-events: none;
+}
+
+.progress-ring-track {
+    stroke-dasharray: none;
+}
+
+.progress-ring-fill {
+    transition: stroke-dashoffset 0.05s linear, stroke 0.3s ease;
+}
+
+.fingerprint-sensor-btn {
+    width: 80px;
+    height: 80px;
+    border-radius: 50%;
+    background: radial-gradient(circle, rgba(255, 18, 63, 0.08) 0%, rgba(255, 18, 63, 0.01) 100%);
+    border: 1px solid rgba(255, 18, 63, 0.22);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: var(--color-primary);
+    cursor: pointer;
+    transition: all 0.25s ease;
+    outline: none;
+    position: relative;
+    box-shadow: 0 0 16px rgba(255, 18, 63, 0.05);
+}
+
+.fingerprint-sensor-btn:hover {
+    background: radial-gradient(circle, rgba(255, 18, 63, 0.16) 0%, rgba(255, 18, 63, 0.03) 100%);
+    border-color: rgba(255, 18, 63, 0.45);
+    color: #ff3c62;
+    box-shadow: 0 0 24px rgba(255, 18, 63, 0.2);
+}
+
+.fingerprint-sensor-btn.scanning {
+    transform: scale(0.96);
+    background: radial-gradient(circle, rgba(255, 18, 63, 0.3) 0%, rgba(255, 18, 63, 0.08) 100%);
+    border-color: var(--color-primary);
+    color: #fff;
+    box-shadow: 0 0 32px rgba(255, 18, 63, 0.35);
+}
+
+.fingerprint-icon-svg {
+    width: 32px;
+    height: 32px;
+    pointer-events: none;
+}
+
+.biometric-hud-log {
+    text-align: center;
+}
+
+.hud-log-line {
+    font-size: 0.7rem;
+    font-weight: 700;
+    letter-spacing: 2px;
+    color: var(--color-text-muted);
+    margin-bottom: 4px;
+    text-transform: uppercase;
+    transition: color 0.3s ease, text-shadow 0.3s ease;
+}
+
+.hud-log-line.verified {
+    color: #00f0ff !important;
+    text-shadow: 0 0 8px rgba(0, 240, 255, 0.4);
+}
+
+.hud-log-line.failed {
+    color: var(--color-primary) !important;
+    text-shadow: 0 0 8px rgba(255, 18, 63, 0.4);
+}
+
+.hud-log-sub {
+    font-size: 0.55rem;
+    color: var(--color-text-muted);
+    letter-spacing: 1px;
+    font-weight: 500;
+    text-transform: uppercase;
+}
+
+/* Shake Validation Error States */
+.input-group.invalid .glass-input {
+    border-color: var(--color-primary) !important;
+    box-shadow: 0 0 10px rgba(255, 18, 63, 0.25) !important;
+    animation: shakeField 0.3s ease;
+}
+
+@keyframes shakeField {
+    0%, 100% { transform: translateX(0); }
+    20%, 60% { transform: translateX(-4px); }
+    40%, 80% { transform: translateX(4px); }
+}
+

@@ -606,8 +606,155 @@
                             <div class="payment-method-selector-hub">
                                 <span class="field-title">Selected Method</span>
                                 <div class="selected-method-display" id="active-payment-hud">
-                                    <i data-lucide="credit-card" class="hud-pay-icon"></i>
+                                    <svg viewBox="0 0 24 24" class="hud-pay-icon" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                        <rect x="1" y="4" width="22" height="16" rx="2" ry="2"/>
+                                        <line x1="1" y1="10" x2="23" y2="10"/>
+                                    </svg>
                                     <span id="active-payment-name">Visa / Mastercard Secured Pipeline</span>
+                                </div>
+                            </div>
+
+                            <!-- Dynamic Payment Gateway Input Terminal -->
+                            <div id="gateway-terminal-container" class="gateway-terminal-container">
+                                <!-- Card Gateway Form -->
+                                <div id="card-gateway" class="gateway-panel">
+                                    <!-- Live Cyberpunk Card Preview -->
+                                    <div class="cyber-credit-card">
+                                        <div class="card-glow-overlay"></div>
+                                        <div class="card-top">
+                                            <span class="bank-tag">NEURAL BANK</span>
+                                            <div class="card-brand" id="card-brand-logo">VISA</div>
+                                        </div>
+                                        <div class="card-middle">
+                                            <div class="card-chip">
+                                                <div class="chip-line"></div>
+                                                <div class="chip-line"></div>
+                                                <div class="chip-line"></div>
+                                            </div>
+                                            <svg viewBox="0 0 24 24" class="card-contactless" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                                <path d="M2 8a10 10 0 0 1 0 8M6 5c5.38 0 9 3.62 9 9s-3.62 9-9 9M10 2c7.83 0 13 5.17 13 13s-5.17 13-13 13"/>
+                                            </svg>
+                                        </div>
+                                        <div class="card-number-display" id="card-num-hud">•••• •••• •••• ••••</div>
+                                        <div class="card-bottom">
+                                            <div class="card-holder-display">
+                                                <span class="card-lbl">HOLDER</span>
+                                                <span class="card-val" id="card-name-hud">CHIP USER</span>
+                                            </div>
+                                            <div class="card-expiry-display">
+                                                <span class="card-lbl">EXPIRES</span>
+                                                <span class="card-val" id="card-expiry-hud">MM/YY</span>
+                                            </div>
+                                            <div class="card-cvv-display">
+                                                <span class="card-lbl">CVV</span>
+                                                <span class="card-val" id="card-cvv-hud">•••</span>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <!-- Form Inputs -->
+                                    <div class="card-form-grid">
+                                        <div class="input-group">
+                                            <label for="card-number-input">Card Signal (Number)</label>
+                                            <div class="input-icon-wrapper">
+                                                <i data-lucide="credit-card" class="input-icon"></i>
+                                                <input type="text" id="card-number-input" class="glass-input" placeholder="4111 2222 3333 4444" autocomplete="cc-number">
+                                            </div>
+                                        </div>
+                                        <div class="input-group">
+                                            <label for="card-holder-input">Cardholder Identity (Name)</label>
+                                            <div class="input-icon-wrapper">
+                                                <i data-lucide="user" class="input-icon"></i>
+                                                <input type="text" id="card-holder-input" class="glass-input" placeholder="Aiden Mercer" autocomplete="cc-name">
+                                            </div>
+                                        </div>
+                                        <div class="card-sub-grid">
+                                            <div class="input-group">
+                                                <label for="card-expiry-input">Expiry Matrix</label>
+                                                <div class="input-icon-wrapper">
+                                                    <i data-lucide="calendar" class="input-icon"></i>
+                                                    <input type="text" id="card-expiry-input" class="glass-input" placeholder="MM/YY" maxlength="5" autocomplete="cc-exp">
+                                                </div>
+                                            </div>
+                                            <div class="input-group">
+                                                <label for="card-cvv-input">Security Node (CVV)</label>
+                                                <div class="input-icon-wrapper">
+                                                    <i data-lucide="lock" class="input-icon"></i>
+                                                    <input type="password" id="card-cvv-input" class="glass-input" placeholder="***" maxlength="3" autocomplete="one-time-code">
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <!-- UPI Gateway Form -->
+                                <div id="upi-gateway" class="gateway-panel hidden">
+                                    <div class="upi-holographic-qr">
+                                        <div class="qr-glow-overlay"></div>
+                                        <div class="qr-scanning-laser"></div>
+                                        <div class="qr-matrix-wrapper">
+                                            <svg viewBox="0 0 100 100" class="qr-svg-graphic">
+                                                <!-- Corners -->
+                                                <rect x="5" y="5" width="25" height="25" fill="none" stroke="var(--color-primary)" stroke-width="4" />
+                                                <rect x="11" y="11" width="13" height="13" fill="var(--color-primary)" />
+                                                
+                                                <rect x="70" y="5" width="25" height="25" fill="none" stroke="var(--color-primary)" stroke-width="4" />
+                                                <rect x="76" y="11" width="13" height="13" fill="var(--color-primary)" />
+                                                
+                                                <rect x="5" y="70" width="25" height="25" fill="none" stroke="var(--color-primary)" stroke-width="4" />
+                                                <rect x="11" y="76" width="13" height="13" fill="var(--color-primary)" />
+                                                
+                                                <!-- Center & random microchips dots -->
+                                                <rect x="40" y="40" width="20" height="20" fill="none" stroke="var(--color-accent-blue)" stroke-width="2" />
+                                                <circle cx="50" cy="50" r="4" fill="var(--color-accent-blue)" />
+                                                
+                                                <!-- Tech bits details -->
+                                                <rect x="40" y="10" width="8" height="6" fill="var(--color-primary)" opacity="0.7" />
+                                                <rect x="55" y="20" width="6" height="12" fill="var(--color-accent-blue)" opacity="0.6" />
+                                                <rect x="15" y="45" width="14" height="6" fill="var(--color-primary)" opacity="0.5" />
+                                                <rect x="80" y="45" width="10" height="15" fill="var(--color-accent-blue)" opacity="0.8" />
+                                                <rect x="45" y="75" width="16" height="8" fill="var(--color-primary)" opacity="0.8" />
+                                            </svg>
+                                        </div>
+                                        <div class="qr-status-indicator">
+                                            <span class="pulse-dot green"></span>
+                                            <span class="qr-hud-text">QR SCANNER SYNCED [LIVE]</span>
+                                        </div>
+                                    </div>
+                                    <div class="input-group">
+                                        <label for="upi-id-input">Virtual Payment Address (UPI ID / Mobile)</label>
+                                        <div class="input-icon-wrapper">
+                                            <i data-lucide="smartphone" class="input-icon"></i>
+                                            <input type="text" id="upi-id-input" class="glass-input" placeholder="username@upi or 9876543210@ybl">
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <!-- Apple Pay / Biometric Gateway Form -->
+                                <div id="applepay-gateway" class="gateway-panel hidden">
+                                    <div class="fingerprint-terminal">
+                                        <div class="fingerprint-radial-progress">
+                                            <svg class="progress-ring-svg" width="120" height="120">
+                                                <circle class="progress-ring-track" stroke="rgba(255,255,255,0.06)" stroke-width="4" fill="transparent" r="52" cx="60" cy="60"/>
+                                                <circle id="fingerprint-progress-bar" class="progress-ring-fill" stroke="var(--color-primary)" stroke-dasharray="326.7" stroke-dashoffset="326.7" stroke-width="4" stroke-linecap="round" fill="transparent" r="52" cx="60" cy="60"/>
+                                            </svg>
+                                            <button type="button" class="fingerprint-sensor-btn" id="fingerprint-btn">
+                                                <svg viewBox="0 0 24 24" class="fingerprint-icon-svg" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+                                                    <path d="M12 22v-3" />
+                                                    <path d="M12 14a3 3 0 0 0-3-3" />
+                                                    <path d="M17 14a5 5 0 0 0-5-5" />
+                                                    <path d="M9 18a7.83 7.83 0 0 1-2-5.5V10c0-4 3.33-7 8-7s8 3 8 7" />
+                                                    <path d="M14 18V12c0-1-.33-2-2-2s-2 1-2 2" />
+                                                    <path d="M20 18a10.91 10.91 0 0 0-1-4.5" />
+                                                    <path d="M4 18c0-3.33 2.67-6 8-6" />
+                                                </svg>
+                                            </button>
+                                        </div>
+                                        <div class="biometric-hud-log" id="biometric-hud-log">
+                                            <div class="hud-log-line active-pulse" id="biometric-status">WAITING FOR TOUCH ID LOCK</div>
+                                            <div class="hud-log-sub" id="biometric-instruction">PRESS & HOLD SENSOR (1.5s)</div>
+                                        </div>
+                                    </div>
                                 </div>
                             </div>
 

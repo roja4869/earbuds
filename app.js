@@ -1098,7 +1098,191 @@ document.addEventListener('DOMContentLoaded', () => {
         if (paymentPanel) paymentPanel.classList.remove('hidden');
         
         State.checkoutStep = 2;
+        // Show correct gateway panel initially
+        switchPaymentGateway(State.paymentMethod);
     };
+
+    // ==========================================================================
+    // Dynamic Payment Gateway Input Terminal Controller
+    // ==========================================================================
+    const gatewayContainer = document.getElementById('gateway-terminal-container');
+    const cardGateway = document.getElementById('card-gateway');
+    const upiGateway = document.getElementById('upi-gateway');
+    const applepayGateway = document.getElementById('applepay-gateway');
+    
+    // Credit Card Fields
+    const cardNumInput = document.getElementById('card-number-input');
+    const cardNameInput = document.getElementById('card-holder-input');
+    const cardExpiryInput = document.getElementById('card-expiry-input');
+    const cardCvvInput = document.getElementById('card-cvv-input');
+    
+    // Credit Card HUD Displays
+    const cardNumHud = document.getElementById('card-num-hud');
+    const cardNameHud = document.getElementById('card-name-hud');
+    const cardExpiryHud = document.getElementById('card-expiry-hud');
+    const cardCvvHud = document.getElementById('card-cvv-hud');
+    const cardBrandLogo = document.getElementById('card-brand-logo');
+    
+    // UPI Fields
+    const upiIdInput = document.getElementById('upi-id-input');
+    
+    // Biometric elements
+    const fingerprintBtn = document.getElementById('fingerprint-btn');
+    const fingerprintProgressBar = document.getElementById('fingerprint-progress-bar');
+    const biometricStatus = document.getElementById('biometric-status');
+    const biometricInstruction = document.getElementById('biometric-instruction');
+
+    let biometricAuthorized = false;
+
+    // Switch visible payment forms dynamically based on key
+    const switchPaymentGateway = (payKey) => {
+        if (!gatewayContainer) return;
+        
+        // Hide all panels
+        if (cardGateway) cardGateway.classList.add('hidden');
+        if (upiGateway) upiGateway.classList.add('hidden');
+        if (applepayGateway) applepayGateway.classList.add('hidden');
+        
+        // Remove input invalid tags
+        const inputs = document.querySelectorAll('.gateway-panel .input-group');
+        inputs.forEach(ip => ip.classList.remove('invalid'));
+
+        // Toggle requested
+        if (payKey === 'visa' || payKey === 'mastercard') {
+            if (cardGateway) cardGateway.classList.remove('hidden');
+            if (cardBrandLogo) cardBrandLogo.textContent = payKey.toUpperCase();
+        } else if (payKey === 'upi' || payKey === 'phonepe' || payKey === 'gpay' || payKey === 'paytm') {
+            if (upiGateway) upiGateway.classList.remove('hidden');
+        } else if (payKey === 'applepay') {
+            if (applepayGateway) applepayGateway.classList.remove('hidden');
+        }
+    };
+
+    // Bind real-time input formatting & preview syncing to Credit Card forms
+    if (cardNumInput) {
+        cardNumInput.addEventListener('input', (e) => {
+            let value = e.target.value.replace(/\D/g, '');
+            let formatted = '';
+            for (let i = 0; i < value.length && i < 16; i++) {
+                if (i > 0 && i % 4 === 0) formatted += ' ';
+                formatted += value[i];
+            }
+            e.target.value = formatted;
+            if (cardNumHud) cardNumHud.textContent = formatted || '•••• •••• •••• ••••';
+        });
+    }
+
+    if (cardNameInput) {
+        cardNameInput.addEventListener('input', (e) => {
+            let value = e.target.value.toUpperCase();
+            if (cardNameHud) cardNameHud.textContent = value || 'CHIP USER';
+        });
+    }
+
+    if (cardExpiryInput) {
+        cardExpiryInput.addEventListener('input', (e) => {
+            let value = e.target.value.replace(/\D/g, '');
+            let formatted = '';
+            if (value.length > 0) {
+                formatted = value.substring(0, 2);
+                if (value.length > 2) {
+                    formatted += '/' + value.substring(2, 4);
+                }
+            }
+            e.target.value = formatted;
+            if (cardExpiryHud) cardExpiryHud.textContent = formatted || 'MM/YY';
+        });
+    }
+
+    if (cardCvvInput) {
+        cardCvvInput.addEventListener('input', (e) => {
+            let value = e.target.value.replace(/\D/g, '').substring(0, 3);
+            e.target.value = value;
+            if (cardCvvHud) cardCvvHud.textContent = value.replace(/./g, '•') || '•••';
+        });
+    }
+
+    // Biometric scanner press-and-hold timer and animations
+    let scanTimer = null;
+    let scanProgress = 0;
+    const totalScanTime = 1500; // 1.5s
+    let lastTime = 0;
+
+    const startScanning = (e) => {
+        e.preventDefault();
+        if (biometricAuthorized) return;
+        
+        if (fingerprintBtn) fingerprintBtn.classList.add('scanning');
+        if (biometricStatus) {
+            biometricStatus.textContent = 'SCANNING FINGERPRINT...';
+            biometricStatus.className = 'hud-log-line active-pulse';
+        }
+        if (biometricInstruction) biometricInstruction.textContent = 'KEEP HOLDING';
+        
+        scanProgress = 0;
+        lastTime = performance.now();
+        
+        const tick = (now) => {
+            const dt = now - lastTime;
+            lastTime = now;
+            scanProgress += dt / totalScanTime;
+            if (scanProgress > 1) scanProgress = 1;
+            
+            const offset = 326.7 - (326.7 * scanProgress);
+            if (fingerprintProgressBar) {
+                fingerprintProgressBar.style.strokeDashoffset = offset;
+            }
+            
+            if (scanProgress < 1) {
+                scanTimer = requestAnimationFrame(tick);
+            } else {
+                biometricAuthorized = true;
+                if (fingerprintBtn) {
+                    fingerprintBtn.classList.remove('scanning');
+                    fingerprintBtn.style.color = '#00f0ff';
+                    fingerprintBtn.style.borderColor = '#00f0ff';
+                }
+                if (fingerprintProgressBar) {
+                    fingerprintProgressBar.style.stroke = '#00f0ff';
+                }
+                if (biometricStatus) {
+                    biometricStatus.textContent = 'IDENTITY SECURED';
+                    biometricStatus.className = 'hud-log-line verified';
+                }
+                if (biometricInstruction) biometricInstruction.textContent = 'APPLE PAY GATEWAY LOCKED [SUCCESS]';
+            }
+        };
+        scanTimer = requestAnimationFrame(tick);
+    };
+
+    const stopScanning = () => {
+        if (biometricAuthorized) return;
+        
+        if (scanTimer) {
+            cancelAnimationFrame(scanTimer);
+            scanTimer = null;
+        }
+        
+        if (fingerprintBtn) fingerprintBtn.classList.remove('scanning');
+        scanProgress = 0;
+        if (fingerprintProgressBar) {
+            fingerprintProgressBar.style.strokeDashoffset = '326.7';
+        }
+        if (biometricStatus) {
+            biometricStatus.textContent = 'SCAN CANCELLED';
+            biometricStatus.className = 'hud-log-line failed';
+        }
+        if (biometricInstruction) biometricInstruction.textContent = 'HOLD AGAIN TO AUTHORIZE';
+    };
+
+    if (fingerprintBtn) {
+        fingerprintBtn.addEventListener('mousedown', startScanning);
+        fingerprintBtn.addEventListener('mouseup', stopScanning);
+        fingerprintBtn.addEventListener('mouseleave', stopScanning);
+        fingerprintBtn.addEventListener('touchstart', startScanning, { passive: false });
+        fingerprintBtn.addEventListener('touchend', stopScanning);
+        fingerprintBtn.addEventListener('touchcancel', stopScanning);
+    }
 
     // Payment selectors click glow updates & Direct step access
     const payCards = document.querySelectorAll('.payment-icon-card');
@@ -1126,6 +1310,9 @@ document.addEventListener('DOMContentLoaded', () => {
             if (activePayHUDName) {
                 activePayHUDName.textContent = namesMapping[payKey] || "Biometric Secured Gateway";
             }
+
+            // Toggle corresponding dynamic payment inputs
+            switchPaymentGateway(payKey);
 
             // Instantly transition to Step 2 showing the payment method active!
             goToStep2();
@@ -1169,6 +1356,77 @@ document.addEventListener('DOMContentLoaded', () => {
 
     if (confirmPaymentBtn && successModal && successModalOverlay) {
         confirmPaymentBtn.addEventListener('click', () => {
+            // Reset validation states first
+            const inputs = document.querySelectorAll('.gateway-panel .input-group');
+            inputs.forEach(ip => ip.classList.remove('invalid'));
+
+            let isValid = true;
+            
+            if (State.paymentMethod === 'visa' || State.paymentMethod === 'mastercard') {
+                const num = cardNumInput ? cardNumInput.value.replace(/\s/g, '') : '';
+                const name = cardNameInput ? cardNameInput.value.trim() : '';
+                const exp = cardExpiryInput ? cardExpiryInput.value.trim() : '';
+                const cvv = cardCvvInput ? cardCvvInput.value.trim() : '';
+                
+                if (num.length !== 16) {
+                    if (cardNumInput) cardNumInput.closest('.input-group').classList.add('invalid');
+                    isValid = false;
+                }
+                if (name.length < 2) {
+                    if (cardNameInput) cardNameInput.closest('.input-group').classList.add('invalid');
+                    isValid = false;
+                }
+                const expRegex = /^(0[1-9]|1[0-2])\/\d{2}$/;
+                if (!expRegex.test(exp)) {
+                    if (cardExpiryInput) cardExpiryInput.closest('.input-group').classList.add('invalid');
+                    isValid = false;
+                } else {
+                    const parts = exp.split('/');
+                    const expMonth = parseInt(parts[0], 10);
+                    const expYear = parseInt('20' + parts[1], 10);
+                    const now = new Date();
+                    const currentMonth = now.getMonth() + 1;
+                    const currentYear = now.getFullYear();
+                    if (expYear < currentYear || (expYear === currentYear && expMonth < currentMonth)) {
+                        if (cardExpiryInput) cardExpiryInput.closest('.input-group').classList.add('invalid');
+                        isValid = false;
+                    }
+                }
+                if (cvv.length !== 3) {
+                    if (cardCvvInput) cardCvvInput.closest('.input-group').classList.add('invalid');
+                    isValid = false;
+                }
+            } else if (State.paymentMethod === 'upi' || State.paymentMethod === 'phonepe' || State.paymentMethod === 'gpay' || State.paymentMethod === 'paytm') {
+                const upiVal = upiIdInput ? upiIdInput.value.trim() : '';
+                const upiRegex = /^[a-zA-Z0-9.\-_]{2,256}@[a-zA-Z]{2,64}$/;
+                const mobileRegex = /^[6-9]\d{9}$/;
+                
+                if (!upiRegex.test(upiVal) && !mobileRegex.test(upiVal)) {
+                    if (upiIdInput) upiIdInput.closest('.input-group').classList.add('invalid');
+                    isValid = false;
+                }
+            } else if (State.paymentMethod === 'applepay') {
+                if (!biometricAuthorized) {
+                    if (biometricStatus) {
+                        biometricStatus.textContent = 'AUTHORIZATION REQUIRED';
+                        biometricStatus.className = 'hud-log-line failed';
+                    }
+                    if (biometricInstruction) {
+                        biometricInstruction.textContent = 'HOLD TOUCH SENSOR TO UNLOCK';
+                    }
+                    const fpTerminal = document.querySelector('.fingerprint-terminal');
+                    if (fpTerminal) {
+                        fpTerminal.classList.add('active-pulse');
+                        setTimeout(() => fpTerminal.classList.remove('active-pulse'), 1000);
+                    }
+                    isValid = false;
+                }
+            }
+            
+            if (!isValid) {
+                return;
+            }
+
             // Generate dynamic transaction ID
             const txId = "1PBUDS-" + Math.random().toString(36).substring(2, 8).toUpperCase();
             const name = document.getElementById('cust-name').value;
@@ -1196,6 +1454,36 @@ document.addEventListener('DOMContentLoaded', () => {
             State.cart = [];
             State.couponApplied = false;
             
+            // Reset Biometric States
+            biometricAuthorized = false;
+            if (fingerprintBtn) {
+                fingerprintBtn.style.color = '';
+                fingerprintBtn.style.borderColor = '';
+            }
+            if (fingerprintProgressBar) {
+                fingerprintProgressBar.style.strokeDashoffset = '326.7';
+                fingerprintProgressBar.style.stroke = '';
+            }
+            if (biometricStatus) {
+                biometricStatus.textContent = 'WAITING FOR TOUCH ID LOCK';
+                biometricStatus.className = 'hud-log-line active-pulse';
+            }
+            if (biometricInstruction) {
+                biometricInstruction.textContent = 'PRESS & HOLD SENSOR (1.5s)';
+            }
+            
+            // Reset Input Fields
+            if (cardNumInput) cardNumInput.value = '';
+            if (cardNameInput) cardNameInput.value = '';
+            if (cardExpiryInput) cardExpiryInput.value = '';
+            if (cardCvvInput) cardCvvInput.value = '';
+            if (upiIdInput) upiIdInput.value = '';
+            
+            if (cardNumHud) cardNumHud.textContent = '•••• •••• •••• ••••';
+            if (cardNameHud) cardNameHud.textContent = 'CHIP USER';
+            if (cardExpiryHud) cardExpiryHud.textContent = 'MM/YY';
+            if (cardCvvHud) cardCvvHud.textContent = '•••';
+
             // Unlock fields
             if (couponInput) {
                 couponInput.value = '';
